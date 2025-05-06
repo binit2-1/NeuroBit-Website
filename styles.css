@@ -156,17 +156,28 @@ header {
 
 header .container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* Change from center to space-between */
     align-items: center;
+    position: relative; /* For absolute positioning of elements */
+}
+
+.logo {
+    position: static; /* Change from absolute to static for desktop */
+    transform: none; /* Remove transform for desktop */
 }
 
 .logo img {
-    height: 40px;
+    height: 100px;
+    width: 100px;
 }
 
 nav ul {
     display: flex;
     list-style: none;
+}
+
+nav {
+    margin: 0 auto; /* Center the navigation */
 }
 
 nav ul li {
@@ -199,9 +210,23 @@ nav ul li a:hover::after {
     width: 100%;
 }
 
-.cta-buttons {
+cta-buttons {
     display: flex;
     gap: 1rem;
+    position: static; /* Change from absolute to static */
+}
+
+/* Mobile menu styles */
+.mobile-menu-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+    position: absolute;
+    left: 2rem; /* Position on the extreme left */
 }
 
 /* Hero Section */
@@ -414,9 +439,10 @@ nav ul li a:hover::after {
 .testimonials-slider {
     position: relative;
     margin: 3rem 0;
-    overflow: visible; /* Changed from hidden to visible to prevent cutting */
+    overflow: hidden; /* Changed from visible to hidden */
     display: flex;
     transition: transform 0.5s ease;
+    width: 100%;
 }
 
 .testimonial {
@@ -426,10 +452,11 @@ nav ul li a:hover::after {
     border: 1px solid var(--border-color);
     margin: 0 1rem;
     transition: all var(--transition-speed);
-    flex: 0 0 calc(33.333% - 2rem);
+    flex: 0 0 calc(100% - 2rem); /* Default to full width minus margins */
     display: flex;
     flex-direction: column;
-    height: 350px; /* Fixed height for uniformity */
+    
+    min-height: 300px; /* Changed from fixed height for better responsiveness */
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
@@ -977,6 +1004,23 @@ footer {
     font-size: 0.9rem;
 }
 
+/* Add this to your existing styles */
+body.menu-open {
+    overflow: hidden;
+}
+
+/* Overlay for mobile menu */
+body.menu-open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
 /* Responsive Styles */
 @media (max-width: 992px) {
     h1 {
@@ -994,88 +1038,59 @@ footer {
     
     .hero-content {
         margin-bottom: 3rem;
+        max-width: 100%;
     }
     
     .hero-cta {
         justify-content: center;
     }
     
+    .features-grid,
+    .benefits-container,
+    .steps-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pricing-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .pricing-card.custom {
+        grid-column: span 2;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
     .cta-buttons {
-        flex-direction: column;
+        display: flex;
+        gap: 0.5rem;
+    }
+    
+    .cta-buttons .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
     }
 }
 
 @media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
+    body {
+        font-size: 15px;
     }
     
-    .logo {
-        margin-bottom: 1rem;
-    }
-    
-    nav ul {
-        margin: 1rem 0;
-    }
-    
-    nav ul li {
-        margin: 0 0.5rem;
-    }
-    
-    .cta-buttons {
-        margin-top: 1rem;
+    .container {
+        padding: 0 1.5rem;
     }
     
     h1 {
-        font-size: 2.5rem;
-    }
-    
-    h2 {
-        font-size: 2rem;
-    }
-    
-    .hero-section {
-        padding: 8rem 0 4rem;
-    }
-    
-    .pricing-card.popular {
-        transform: scale(1);
-    }
-    
-    .pricing-card.popular:hover {
-        transform: translateY(-10px);
-    }
-    
-    .cta-content h2 {
-        font-size: 2.5rem;
-    }
-    
-    .cta-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-}
-
-@media (max-width: 576px) {
-    nav ul {
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    
-    nav ul li {
-        margin: 0.5rem;
-    }
-    
-    h1 {
-        font-size: 2rem;
+        font-size: 2.3rem;
     }
     
     h2 {
         font-size: 1.8rem;
     }
     
-    .btn-large {
-        padding: 0.75rem 1.5rem;
+    .hero-section {
+        padding: 8rem 0 4rem;
     }
     
     .features-grid,
@@ -1083,10 +1098,170 @@ footer {
     .steps-container,
     .pricing-cards {
         grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
     
-    .cta-content h2 {
+    .pricing-card.popular {
+        transform: scale(1);
+        border-width: 2px;
+    }
+    
+    .pricing-card.popular:hover {
+        transform: translateY(-10px);
+    }
+    
+    .pricing-card.custom {
+        grid-column: span 1;
+    }
+    
+    section {
+        padding: 4rem 0;
+    }
+    
+    .table-container {
+        margin: 0 -1.5rem;
+        width: calc(100% + 3rem);
+        overflow-x: auto;
+    }
+    
+    table {
+        min-width: 650px;
+    }
+    
+    .mobile-menu-toggle {
+        display: block;
+    }
+    
+    header .container {
+        flex-wrap: wrap;
+    }
+    
+    nav {
+        position: fixed;
+        top: 0;
+        left: -100%; /* Change from right to left */
+        width: 70%;
+        height: 100vh;
+        background-color: var(--darker-bg);
+        padding: 5rem 2rem 2rem;
+        transition: left 0.3s ease; /* Change from right to left */
+        z-index: 1000;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.2); /* Change shadow direction */
+    }
+    
+    nav.active {
+        left: 0; /* Change from right to left */
+    }
+    
+    nav ul {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    nav ul li {
+        margin: 1rem 0;
+        width: 100%;
+    }
+    
+    nav ul li a {
+        display: block;
+        padding: 0.5rem 0;
+        width: 100%;
+    }
+    
+    .cta-buttons {
+        margin-left: auto;
+    }
+    
+    .testimonials-slider {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto; /* Enable horizontal scrolling */
+        scroll-snap-type: x mandatory; /* Snap to testimonials when scrolling */
+        -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        padding-bottom: 1rem; /* Space for scrollbar */
+    }
+    
+    .testimonial {
+        flex: 0 0 85%; /* Show most of one testimonial at a time */
+        scroll-snap-align: center; /* Center testimonials when scrolling */
+        margin: 0 0.75rem;
+    }
+    
+    /* Hide slider controls on mobile as we're using native scrolling */
+    .testimonial-controls {
+        display: none;
+    }
+}
+
+@media (max-width: 576px) {
+    h1 {
         font-size: 2rem;
+    }
+    
+    h2 {
+        font-size: 1.6rem;
+    }
+    
+    .section-subtitle {
+        font-size: 1rem;
+    }
+    
+    .btn-large {
+        padding: 0.75rem 1.5rem;
+        font-size: 1rem;
+    }
+    
+    .hero-cta {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .hero-cta .btn {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+    
+    .feature-card,
+    .benefit-item,
+    .step,
+    .pricing-card {
+        padding: 1.5rem;
+    }
+    
+    .testimonial {
+        padding: 1.5rem;
+        margin: 0 0.5rem;
+    }
+    
+    .testimonial-controls {
+        gap: 1rem;
+    }
+    
+    .pricing-toggle {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .save-badge {
+        display: inline-block;
+        margin-top: 0.5rem;
+    }
+    
+    header .container {
+        padding: 0 1rem;
+    }
+    
+    .logo img {
+        height: 30px;
+    }
+    
+    .cta-buttons .btn-outline {
+        display: none;
+    }
+    
+    nav {
+        width: 85%;
     }
 }
 

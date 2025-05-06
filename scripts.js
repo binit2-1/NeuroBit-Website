@@ -1,5 +1,25 @@
 // Wait for the DOM to be fully loaded
 document.addEventListener('DOMContentLoaded', function() {
+    // Mobile Menu Toggle
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const nav = document.querySelector('nav');
+    const navLinks = document.querySelectorAll('nav ul li a');
+    
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', () => {
+            nav.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
+        });
+        
+        // Close menu when clicking on links
+        navLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                nav.classList.remove('active');
+                document.body.classList.remove('menu-open');
+            });
+        });
+    }
+    
     // FAQ Accordion
     const faqItems = document.querySelectorAll('.faq-item');
     
@@ -30,7 +50,15 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentIndex = 0;
     
+    // Only use JavaScript slider on larger screens
     function updateSlider() {
+        // Check if we're on mobile (where we use native scrolling)
+        if (window.innerWidth <= 768) {
+            // Reset any transform for mobile scrolling
+            slider.style.transform = '';
+            return;
+        }
+        
         const slideWidth = testimonials[0].offsetWidth + 32; // Width + margin
         slider.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
         
@@ -59,6 +87,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialize slider
     updateSlider();
+    
+    // Update slider on window resize
+    window.addEventListener('resize', updateSlider);
     
     // Pricing Toggle
     const billingToggle = document.getElementById('billing-toggle');
